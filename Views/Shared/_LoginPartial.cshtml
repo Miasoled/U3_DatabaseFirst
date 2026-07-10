@@ -1,0 +1,54 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-nav ms-lg-2 align-items-lg-center gap-1">
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2 py-lg-2" href="#"
+           role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="navbar-user-avatar">
+                @(UserManager.GetUserName(User)?.Substring(0, 1).ToUpper() ?? "U")
+            </span>
+            <span class="d-none d-lg-inline" style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.875rem;font-weight:500;color:var(--text-secondary)">
+                @UserManager.GetUserName(User)
+            </span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                    <i class="bi bi-person-circle"></i> Mi perfil
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">
+                    <i class="bi bi-key"></i> Cambiar contraseña
+                </a>
+            </li>
+            <li><hr class="dropdown-divider" /></li>
+            <li>
+                <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout"
+                      asp-route-returnUrl="@Url.Action("Index","Home",new{area=""})">
+                    <button type="submit" class="dropdown-item text-danger">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">
+            Registrarse
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link btn-nav-login" asp-area="Identity" asp-page="/Account/Login">
+            <i class="bi bi-box-arrow-in-right"></i> Iniciar sesión
+        </a>
+    </li>
+}
+</ul>

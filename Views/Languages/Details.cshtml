@@ -1,0 +1,35 @@
+@model SakilaApp.Models.Language
+
+@{
+    ViewData["Title"] = "Detalle del Idioma";
+}
+
+<div class="page-header">
+    <h1><span class="page-header-icon">🌐</span> Detalle del Idioma</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card mb-3">
+            <div class="card-header">Idioma #@Model?.LanguageId</div>
+            <div class="card-body p-0">
+                <div class="detail-card border-0">
+                    <div class="detail-row">
+                        <span class="detail-label">@Html.DisplayNameFor(m => m.Name)</span>
+                        <span class="detail-value">@Html.DisplayFor(m => m.Name)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">@Html.DisplayNameFor(m => m.LastUpdate)</span>
+                        <span class="detail-value text-muted">@Html.DisplayFor(m => m.LastUpdate)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model?.LanguageId" class="btn btn-primary">✏️ Editar</a>
+            <a asp-action="Delete" asp-route-id="@Model?.LanguageId" class="btn btn-danger">🗑 Eliminar</a>
+            <a asp-action="Index" class="btn btn-outline-secondary ms-auto">← Volver al listado</a>
+        </div>
+    </div>
+</div>

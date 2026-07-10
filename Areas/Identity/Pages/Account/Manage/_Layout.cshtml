@@ -1,0 +1,34 @@
+﻿@{
+    if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout != null)
+    {
+        Layout = parentLayout.ToString();
+    }
+    else
+    {
+        Layout = "/Views/Shared/_Layout.cshtml";
+    }
+}
+
+<div class="page-header mb-4">
+    <h1><i class="bi bi-person-gear"></i> Manage your account</h1>
+</div>
+
+<div class="row g-4 align-items-start" style="padding-bottom: 5rem;">
+    <div class="col-md-3">
+        <div class="card" style="position: sticky; top: 1rem;">
+            <div class="card-header">
+                <i class="bi bi-sliders"></i> Settings
+            </div>
+            <div class="card-body p-2">
+                <partial name="_ManageNav" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        @RenderBody()
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}

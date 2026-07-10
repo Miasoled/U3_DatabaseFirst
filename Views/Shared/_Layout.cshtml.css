@@ -1,0 +1,9 @@
+﻿/* Scoped layout styles — all visual theming is handled by site.css */
+
+/* Override the default scaffolded footer positioning */
+.footer {
+    position: relative !important;
+    bottom: auto !important;
+    line-height: normal !important;
+    padding: .85rem 0 !important;
+}

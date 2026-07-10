@@ -1,0 +1,33 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<div class="error-page">
+    <div class="error-code">500</div>
+    <h2 class="mt-2">Algo salió mal</h2>
+    <p style="color:var(--text-secondary)">Ocurrió un error al procesar tu solicitud.</p>
+
+    @if (Model.ShowRequestId)
+    {
+        <div class="alert alert-danger d-inline-block mt-3 text-start">
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </div>
+    }
+
+    <div class="card mx-auto mt-4 text-start" style="max-width:580px;">
+        <div class="card-header"><i class="bi bi-lightbulb"></i> Modo desarrollo</div>
+        <div class="card-body">
+            <p style="color:var(--text-secondary);margin-bottom:.5rem;">
+                Cambiar al entorno <strong>Development</strong> mostrará más información sobre el error.
+            </p>
+            <p style="color:var(--text-secondary);margin:0;">
+                Establece <code>ASPNETCORE_ENVIRONMENT</code> = <code>Development</code> y reinicia la app.
+            </p>
+        </div>
+    </div>
+
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-4">
+        <i class="bi bi-arrow-left"></i> Volver al inicio
+    </a>
+</div>

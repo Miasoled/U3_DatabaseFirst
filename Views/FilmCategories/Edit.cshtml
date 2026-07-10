@@ -1,0 +1,40 @@
+@model SakilaApp.Models.FilmCategory
+
+@{
+    ViewData["Title"] = "Editar relación Película–Categoría";
+}
+
+<div class="page-header">
+    <h1><span class="page-header-icon">✏️</span> Editar relación Película–Categoría</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+        <div class="card">
+            <div class="card-header">Editar relación</div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+                    <input type="hidden" asp-for="FilmId" />
+                    <input type="hidden" asp-for="CategoryId" />
+
+                    <div class="form-group">
+                        <label asp-for="LastUpdate" class="control-label">Última actualización</label>
+                        <input asp-for="LastUpdate" class="form-control" />
+                        <span asp-validation-for="LastUpdate" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="submit" class="btn btn-primary">✓ Guardar cambios</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

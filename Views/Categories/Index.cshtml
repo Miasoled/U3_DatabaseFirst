@@ -1,0 +1,35 @@
+@model IEnumerable<SakilaApp.Models.Category>
+@{ ViewData["Title"] = "Categorías"; }
+
+<div class="page-header">
+    <h1><i class="bi bi-tags"></i> Categorías</h1>
+    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nueva Categoría</a>
+</div>
+
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>@Html.DisplayNameFor(m => m.Name)</th>
+                <th>@Html.DisplayNameFor(m => m.LastUpdate)</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="color:var(--text-muted);font-size:.8rem;">@item.CategoryId</td>
+                    <td style="font-weight:600;color:var(--text);">@Html.DisplayFor(i => item.Name)</td>
+                    <td style="color:var(--text-muted);font-size:.82rem;">@Html.DisplayFor(i => item.LastUpdate)</td>
+                    <td class="text-end table-actions">
+                        <a asp-action="Details" asp-route-id="@item.CategoryId" class="action-link action-link-view"><i class="bi bi-eye"></i> Ver</a>
+                        <a asp-action="Edit"    asp-route-id="@item.CategoryId" class="action-link action-link-edit"><i class="bi bi-pencil"></i> Editar</a>
+                        <a asp-action="Delete"  asp-route-id="@item.CategoryId" class="action-link action-link-delete"><i class="bi bi-trash"></i> Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,109 @@
+@model IEnumerable<SakilaApp.Models.Film>
+
+@{
+    ViewData["Title"] = "Películas";
+}
+
+<div class="page-header">
+    <h1><span class="page-header-icon">🎥</span> Películas</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Nueva Película</a>
+</div>
+
+<!-- Filtros -->
+<div class="search-bar">
+    <form asp-action="Index" method="get">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-5">
+                <label class="control-label">Buscar por título</label>
+                <input type="text" name="buscar" value="@ViewBag.Buscar"
+                       class="form-control" placeholder="Ej: Matrix..." />
+            </div>
+            <div class="col-md-3">
+                <label class="control-label">Duración mínima (min)</label>
+                <input type="number" name="duracionMinima" value="@ViewBag.DuracionMinima"
+                       class="form-control" placeholder="Ej: 90" />
+            </div>
+            <div class="col-md-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">🔍 Filtrar</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">✕ Limpiar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="table-wrapper mb-3">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Año</th>
+                <th>Duración</th>
+                <th>Tarifa</th>
+                <th>Idioma</th>
+                <th>Costo rep.</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <strong style="color:var(--text);">@Html.DisplayFor(i => item.Title)</strong>
+                        @if (item.SpecialFeatures != null)
+                        {
+                            <br /><span class="text-muted" style="font-size:0.75rem;">@item.SpecialFeatures</span>
+                        }
+                    </td>
+                    <td><span class="text-muted">@Html.DisplayFor(i => item.ReleaseYear)</span></td>
+                    <td>@Html.DisplayFor(i => item.Length) <span class="text-muted" style="font-size:0.78rem;">min</span></td>
+                    <td>$@Html.DisplayFor(i => item.RentalRate)</td>
+                    <td>@Html.DisplayFor(i => item.Language.Name)</td>
+                    <td>$@Html.DisplayFor(i => item.ReplacementCost)</td>
+                    <td class="text-end table-actions">
+                        <a asp-action="Details" asp-route-id="@item.FilmId" class="action-link action-link-details">👁 Ver</a>
+                        <a asp-action="Edit"    asp-route-id="@item.FilmId" class="action-link action-link-edit">✏️ Editar</a>
+                        <a asp-action="Delete"  asp-route-id="@item.FilmId" class="action-link action-link-delete">🗑 Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Paginación -->
+<nav aria-label="Paginación">
+    <ul class="pagination justify-content-center">
+        @if (ViewBag.PaginaActual > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-buscar="@ViewBag.Buscar"
+                   asp-route-duracionMinima="@ViewBag.DuracionMinima"
+                   asp-route-pagina="@(ViewBag.PaginaActual - 1)">
+                    ‹ Anterior
+                </a>
+            </li>
+        }
+        @for (int i = 1; i <= ViewBag.TotalPaginas; i++)
+        {
+            <li class="page-item @(i == ViewBag.PaginaActual ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-buscar="@ViewBag.Buscar"
+                   asp-route-duracionMinima="@ViewBag.DuracionMinima"
+                   asp-route-pagina="@i">@i</a>
+            </li>
+        }
+        @if (ViewBag.PaginaActual < ViewBag.TotalPaginas)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-buscar="@ViewBag.Buscar"
+                   asp-route-duracionMinima="@ViewBag.DuracionMinima"
+                   asp-route-pagina="@(ViewBag.PaginaActual + 1)">
+                    Siguiente ›
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

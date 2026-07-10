@@ -1,0 +1,47 @@
+@model SakilaApp.Models.FilmActor
+
+@{
+    ViewData["Title"] = "Eliminar relación Película–Actor";
+}
+
+<div class="page-header">
+    <h1><span class="page-header-icon">🗑</span> Eliminar relación Película–Actor</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="delete-warning-card mb-4">
+            <div class="warning-icon">⚠️</div>
+            <h3>¿Confirmas que deseas eliminar esta relación?</h3>
+            <p class="text-muted mb-0 mt-1">Esta acción no se puede deshacer.</p>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">Relación Película–Actor</div>
+            <div class="card-body p-0">
+                <div class="detail-card border-0">
+                    <div class="detail-row">
+                        <span class="detail-label">@Html.DisplayNameFor(m => m.Actor)</span>
+                        <span class="detail-value">@Html.DisplayFor(m => m.Actor.ActorId)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">@Html.DisplayNameFor(m => m.Film)</span>
+                        <span class="detail-value">@Html.DisplayFor(m => m.Film.FilmId)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">@Html.DisplayNameFor(m => m.LastUpdate)</span>
+                        <span class="detail-value text-muted">@Html.DisplayFor(m => m.LastUpdate)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="Delete" class="d-flex gap-2">
+            <input type="hidden" asp-for="ActorId" />
+            <input type="hidden" asp-for="FilmId" />
+            <button type="submit" class="btn btn-danger">🗑 Sí, eliminar</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
