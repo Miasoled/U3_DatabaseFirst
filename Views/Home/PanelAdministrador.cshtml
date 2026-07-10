@@ -1,0 +1,90 @@
+@{
+    ViewData["Title"] = "Panel del Administrador";
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-gear-fill"></i> Panel del Administrador</h1>
+    <span class="badge" style="background:var(--primary-light);color:var(--primary);padding:.4em .9em;border-radius:20px;font-size:.8rem;font-weight:600;">
+        <i class="bi bi-shield-lock"></i> Solo Administrador
+    </span>
+</div>
+
+<div class="alert alert-info d-flex align-items-center gap-2 mb-4">
+    <i class="bi bi-info-circle-fill flex-shrink-0"></i>
+    <span>
+        Esta sección está protegida con <code>[Authorize(Roles = "Administrador")]</code>.
+        Solo los usuarios con rol <strong>Administrador</strong> pueden acceder.
+    </span>
+</div>
+
+<!-- Role permissions summary -->
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="bi bi-shield-fill-check" style="color:var(--primary)"></i>
+                Rol: Administrador
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0" style="font-size:.9rem;color:var(--text-secondary);">
+                    <li class="py-1 border-bottom" style="border-color:var(--border)!important"><i class="bi bi-check-circle-fill text-success me-2"></i>Acceso a Panel de Administración</li>
+                    <li class="py-1 border-bottom" style="border-color:var(--border)!important"><i class="bi bi-check-circle-fill text-success me-2"></i>Ver, crear, editar y eliminar Películas</li>
+                    <li class="py-1 border-bottom" style="border-color:var(--border)!important"><i class="bi bi-check-circle-fill text-success me-2"></i>Ver, crear, editar y eliminar Actores</li>
+                    <li class="py-1 border-bottom" style="border-color:var(--border)!important"><i class="bi bi-check-circle-fill text-success me-2"></i>Gestión completa de Categorías</li>
+                    <li class="py-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Gestión completa de Idiomas</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="bi bi-person-badge-fill" style="color:#6366f1"></i>
+                Rol: Empleado
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0" style="font-size:.9rem;color:var(--text-secondary);">
+                    <li class="py-1 border-bottom" style="border-color:var(--border)!important"><i class="bi bi-x-circle-fill text-danger me-2"></i>Sin acceso al Panel de Administración</li>
+                    <li class="py-1 border-bottom" style="border-color:var(--border)!important"><i class="bi bi-x-circle-fill text-danger me-2"></i>Sin acceso a Películas</li>
+                    <li class="py-1 border-bottom" style="border-color:var(--border)!important"><i class="bi bi-check-circle-fill text-success me-2"></i>Solo ver Actores (sin modificar)</li>
+                    <li class="py-1 border-bottom" style="border-color:var(--border)!important"><i class="bi bi-x-circle-fill text-danger me-2"></i>Sin acceso a Categorías</li>
+                    <li class="py-1"><i class="bi bi-check-circle-fill text-success me-2"></i>Ver e idiomas (sin modificar)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2 style="font-size:1.1rem;font-weight:600;margin-bottom:1rem;">Accesos rápidos</h2>
+<div class="admin-grid">
+    <a asp-controller="Films" asp-action="Index" class="admin-card">
+        <div class="admin-icon"><i class="bi bi-camera-video-fill"></i></div>
+        <h5>Películas</h5>
+        <p>Gestionar catálogo</p>
+    </a>
+    <a asp-controller="Actors" asp-action="Index" class="admin-card">
+        <div class="admin-icon"><i class="bi bi-person-badge-fill"></i></div>
+        <h5>Actores</h5>
+        <p>Gestionar actores</p>
+    </a>
+    <a asp-controller="Categories" asp-action="Index" class="admin-card">
+        <div class="admin-icon"><i class="bi bi-tags-fill"></i></div>
+        <h5>Categorías</h5>
+        <p>Gestionar categorías</p>
+    </a>
+    <a asp-controller="Languages" asp-action="Index" class="admin-card">
+        <div class="admin-icon"><i class="bi bi-translate"></i></div>
+        <h5>Idiomas</h5>
+        <p>Gestionar idiomas</p>
+    </a>
+    <a asp-controller="FilmActors" asp-action="Index" class="admin-card">
+        <div class="admin-icon"><i class="bi bi-link-45deg"></i></div>
+        <h5>Película – Actor</h5>
+        <p>Gestionar relaciones</p>
+    </a>
+    <a asp-controller="FilmCategories" asp-action="Index" class="admin-card">
+        <div class="admin-icon"><i class="bi bi-link-45deg"></i></div>
+        <h5>Película – Categoría</h5>
+        <p>Gestionar relaciones</p>
+    </a>
+</div>

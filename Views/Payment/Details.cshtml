@@ -1,0 +1,45 @@
+@model SakilaApp.Models.Commerce.PaymentTransaction
+
+<h1>Pago generado</h1>
+
+<p><strong>Orden:</strong> @Model.PurchaseOrderId</p>
+<p><strong>Estado:</strong> @Model.Status</p>
+<p><strong>Total:</strong> @((Model.AmountInCents / 100m).ToString("C"))</p>
+<p><strong>Transacción cliente:</strong> @Model.ClientTransactionId</p>
+
+@if (!string.IsNullOrWhiteSpace(Model.PayphonePaymentUrl))
+{
+    <a class="btn btn-success" href="@Model.PayphonePaymentUrl" target="_blank">
+        Abrir link de pago PayPhone
+    </a>
+}
+
+@if (User.IsInRole("Administrador") && Model.Status == "Pending")
+{
+    <a class="btn btn-warning" asp-action="MarkAsPaid" asp-route-id="@Model.PaymentTransactionId">
+        Marcar como pagado para demostración
+    </a>
+}
+
+<h2>Detalle de la orden</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Película</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var d in Model.PurchaseOrder.Details)
+    {
+        <tr>
+            <td>@d.FilmTitle</td>
+            <td>@d.Quantity</td>
+            <td>@d.UnitPrice.ToString("C")</td>
+            <td>@d.Subtotal.ToString("C")</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="hero-section">
+    <h1>Bienvenido a <span>SakilaApp</span></h1>
+    <p>Gestiona el catálogo completo de películas, actores, categorías e idiomas de la base de datos Sakila.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a asp-controller="Films" asp-action="Index" class="btn btn-primary btn-lg">
+            <i class="bi bi-camera-video"></i> Ver Películas
+        </a>
+        <a asp-controller="Actors" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+            <i class="bi bi-person-badge"></i> Ver Actores
+        </a>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-6 col-md-3">
+        <a asp-controller="Films" asp-action="Index" class="stat-card">
+            <div class="stat-icon"><i class="bi bi-camera-video-fill"></i></div>
+            <h5>Películas</h5>
+            <div class="stat-label">Films</div>
+        </a>
+    </div>
+    <div class="col-6 col-md-3">
+        <a asp-controller="Actors" asp-action="Index" class="stat-card">
+            <div class="stat-icon"><i class="bi bi-person-badge-fill"></i></div>
+            <h5>Actores</h5>
+            <div class="stat-label">Actors</div>
+        </a>
+    </div>
+    <div class="col-6 col-md-3">
+        <a asp-controller="Categories" asp-action="Index" class="stat-card">
+            <div class="stat-icon"><i class="bi bi-tags-fill"></i></div>
+            <h5>Categorías</h5>
+            <div class="stat-label">Categories</div>
+        </a>
+    </div>
+    <div class="col-6 col-md-3">
+        <a asp-controller="Languages" asp-action="Index" class="stat-card">
+            <div class="stat-icon"><i class="bi bi-translate"></i></div>
+            <h5>Idiomas</h5>
+            <div class="stat-label">Languages</div>
+        </a>
+    </div>
+</div>

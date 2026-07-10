@@ -1,0 +1,38 @@
+@model IEnumerable<SakilaApp.Models.Commerce.FilmStock>
+
+<h1>Catálogo de películas</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Película</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Comprar</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Title</td>
+            <td>@item.UnitPrice.ToString("C")</td>
+            <td>@item.Stock</td>
+            <td>
+                <form asp-action="AddToCart" method="post" class="d-flex gap-2">
+                    <input type="hidden" name="filmStockId" value="@item.FilmStockId" />
+                    <input type="number" name="quantity" value="1" min="1" max="@item.Stock" class="form-control" style="width:90px" />
+                    <button class="btn btn-primary">Agregar</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<a class="btn btn-success" asp-action="Cart">Ver carrito</a>

@@ -1,0 +1,36 @@
+@model IEnumerable<SakilaApp.Models.Commerce.ShoppingCartItem>
+
+<h1>Carrito</h1>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Película</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.FilmStock.Title</td>
+            <td>@item.Quantity</td>
+            <td>@item.FilmStock.UnitPrice.ToString("C")</td>
+            <td>@((item.Quantity * item.FilmStock.UnitPrice).ToString("C"))</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<h3>Total: @Model.Sum(i => i.Quantity * i.FilmStock.UnitPrice).ToString("C")</h3>
+
+<form asp-action="Checkout" method="post">
+    <button class="btn btn-primary">Generar orden y pagar con PayPhone</button>
+</form>

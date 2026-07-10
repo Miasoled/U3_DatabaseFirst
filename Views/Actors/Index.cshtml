@@ -1,0 +1,39 @@
+@model IEnumerable<SakilaApp.Models.Actor>
+@{ ViewData["Title"] = "Actores"; }
+
+<div class="page-header">
+    <h1><i class="bi bi-person-badge"></i> Actores</h1>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> Nuevo Actor
+    </a>
+</div>
+
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>@Html.DisplayNameFor(m => m.FirstName)</th>
+                <th>@Html.DisplayNameFor(m => m.LastName)</th>
+                <th>@Html.DisplayNameFor(m => m.LastUpdate)</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="color:var(--text-muted);font-size:.8rem;">@item.ActorId</td>
+                    <td style="font-weight:600;color:var(--text);">@Html.DisplayFor(i => item.FirstName)</td>
+                    <td>@Html.DisplayFor(i => item.LastName)</td>
+                    <td style="color:var(--text-muted);font-size:.82rem;">@Html.DisplayFor(i => item.LastUpdate)</td>
+                    <td class="text-end table-actions">
+                        <a asp-action="Details" asp-route-id="@item.ActorId" class="action-link action-link-view"><i class="bi bi-eye"></i> Ver</a>
+                        <a asp-action="Edit"    asp-route-id="@item.ActorId" class="action-link action-link-edit"><i class="bi bi-pencil"></i> Editar</a>
+                        <a asp-action="Delete"  asp-route-id="@item.ActorId" class="action-link action-link-delete"><i class="bi bi-trash"></i> Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

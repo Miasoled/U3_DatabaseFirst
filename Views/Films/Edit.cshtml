@@ -1,0 +1,96 @@
+@model SakilaApp.Models.Film
+
+@{
+    ViewData["Title"] = "Editar Película";
+}
+
+<div class="page-header">
+    <h1><span class="page-header-icon">✏️</span> Editar Película</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">Editar: @Model?.Title</div>
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+                    <input type="hidden" asp-for="FilmId" />
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label asp-for="Title" class="control-label">Título</label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ReleaseYear" class="control-label">Año</label>
+                            <input asp-for="ReleaseYear" class="form-control" />
+                            <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Description" class="control-label">Descripción</label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LanguageId" class="control-label">Idioma</label>
+                            <select asp-for="LanguageId" class="form-select" asp-items="ViewBag.LanguageId"></select>
+                            <span asp-validation-for="LanguageId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OriginalLanguageId" class="control-label">Idioma original</label>
+                            <select asp-for="OriginalLanguageId" class="form-select" asp-items="ViewBag.OriginalLanguageId"></select>
+                            <span asp-validation-for="OriginalLanguageId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="RentalDuration" class="control-label">Duración alquiler (días)</label>
+                            <input asp-for="RentalDuration" class="form-control" />
+                            <span asp-validation-for="RentalDuration" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="RentalRate" class="control-label">Tarifa alquiler</label>
+                            <input asp-for="RentalRate" class="form-control" />
+                            <span asp-validation-for="RentalRate" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Length" class="control-label">Duración (min)</label>
+                            <input asp-for="Length" class="form-control" />
+                            <span asp-validation-for="Length" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="ReplacementCost" class="control-label">Costo reposición</label>
+                            <input asp-for="ReplacementCost" class="form-control" />
+                            <span asp-validation-for="ReplacementCost" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="SpecialFeatures" class="control-label">Características especiales</label>
+                            <input asp-for="SpecialFeatures" class="form-control" />
+                            <span asp-validation-for="SpecialFeatures" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LastUpdate" class="control-label">Última actualización</label>
+                            <input asp-for="LastUpdate" class="form-control" />
+                            <span asp-validation-for="LastUpdate" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Fulltext" class="control-label">Texto completo</label>
+                            <input asp-for="Fulltext" class="form-control" />
+                            <span asp-validation-for="Fulltext" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">✓ Guardar cambios</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

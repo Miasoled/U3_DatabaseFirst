@@ -1,0 +1,73 @@
+@model SakilaApp.Models.Film
+
+@{
+    ViewData["Title"] = "Nueva Película";
+}
+
+<div class="page-header">
+    <h1><span class="page-header-icon">🎥</span> Nueva Película</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">← Volver</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">Información de la película</div>
+            <div class="card-body">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" role="alert"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label asp-for="Title" class="control-label">Título</label>
+                            <input asp-for="Title" class="form-control" placeholder="Título de la película" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="ReleaseYear" class="control-label">Año de lanzamiento</label>
+                            <input asp-for="ReleaseYear" class="form-control" placeholder="Ej: 2005" />
+                            <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Description" class="control-label">Descripción</label>
+                            <input asp-for="Description" class="form-control" placeholder="Sinopsis breve..." />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LanguageId" class="control-label">Idioma</label>
+                            <select asp-for="LanguageId" class="form-select" asp-items="ViewBag.LanguageId"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="OriginalLanguageId" class="control-label">Idioma original</label>
+                            <select asp-for="OriginalLanguageId" class="form-select" asp-items="ViewBag.OriginalLanguageId"></select>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Length" class="control-label">Duración (min)</label>
+                            <input asp-for="Length" class="form-control" placeholder="Ej: 120" />
+                            <span asp-validation-for="Length" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="SpecialFeatures" class="control-label">Características especiales</label>
+                            <input asp-for="SpecialFeatures" class="form-control" placeholder="Ej: Trailers" />
+                            <span asp-validation-for="SpecialFeatures" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Fulltext" class="control-label">Texto completo</label>
+                            <input asp-for="Fulltext" class="form-control" />
+                            <span asp-validation-for="Fulltext" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary">✓ Guardar película</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

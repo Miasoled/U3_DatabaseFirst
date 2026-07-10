@@ -1,0 +1,38 @@
+@model IEnumerable<SakilaApp.Models.FilmCategory>
+
+@{
+    ViewData["Title"] = "Película–Categoría";
+}
+
+<div class="page-header">
+    <h1><span class="page-header-icon">🔗</span> Relación Película–Categoría</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Nueva relación</a>
+</div>
+
+<div class="table-wrapper">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Categoría ID</th>
+                <th>Película ID</th>
+                <th>@Html.DisplayNameFor(m => m.LastUpdate)</th>
+                <th class="text-end">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(i => item.Category.CategoryId)</td>
+                    <td>@Html.DisplayFor(i => item.Film.FilmId)</td>
+                    <td><span class="text-muted small">@Html.DisplayFor(i => item.LastUpdate)</span></td>
+                    <td class="text-end table-actions">
+                        @Html.ActionLink("👁 Ver",     "Details", null, new { @class = "action-link action-link-details" })
+                        @Html.ActionLink("✏️ Editar", "Edit",    null, new { @class = "action-link action-link-edit" })
+                        @Html.ActionLink("🗑 Eliminar","Delete",  null, new { @class = "action-link action-link-delete" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
