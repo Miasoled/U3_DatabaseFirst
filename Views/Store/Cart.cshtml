@@ -34,3 +34,14 @@
 <form asp-action="Checkout" method="post">
     <button class="btn btn-primary">Generar orden y pagar con PayPhone</button>
 </form>
+<form asp-action="Checkout" method="post">
+        <input type="hidden" name="provider" value="PayPal" />
+        <button class="btn btn-info">
+            Pagar con PayPal Sandbox
+        </button>
+</form>
+<form asp-action="CheckoutPayPalButton" method="post">
+    <button class="btn btn-dark">
+        Pagar con boton PayPal / Tarjeta Sandbox
+    </button>
+</form>

@@ -12,4 +12,14 @@ public class PaymentTransaction
     public string Status { get; set; } = "Pending";
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? ConfirmedAt { get; set; }
+
+    public string Provider { get; set; } = "PayPhone";
+
+    public string? PayPalOrderId { get; set; }
+
+    public string? PayPalCaptureId { get; set; }
+
+    public string? PayPalApprovalUrl { get; set; }
+
+    public string? GatewayResponse { get; set; }
 }

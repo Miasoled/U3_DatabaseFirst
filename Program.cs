@@ -20,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>//
 builder.Services
     .AddDefaultIdentity<IdentityUser>(options =>
     {
+                                                 //Cambiar a true  
         options.SignIn.RequireConfirmedAccount = false;
         options.Password.RequireDigit = true;
         options.Password.RequireUppercase = true;
@@ -42,10 +43,17 @@ builder.Services
         options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
     });
 
+//Pasarela de Pagos con PayPhone
 builder.Services.Configure<PayPhoneSettings>(
     builder.Configuration.GetSection("PayPhone"));
 
 builder.Services.AddHttpClient<PayPhoneApiLinkService>();
+
+//Pasarelas de Pagos con PayPal
+builder.Services.Configure<PayPalSettings>(
+    builder.Configuration.GetSection("PayPal"));
+
+builder.Services.AddHttpClient<PayPalService>();
 
 var app = builder.Build();
 

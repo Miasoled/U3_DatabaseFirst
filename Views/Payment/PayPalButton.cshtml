@@ -1,0 +1,83 @@
+@model SakilaApp.Models.Commerce.PurchaseOrder
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+ 
+@{
+    var paypalClientId = Configuration["PayPal:ClientId"];
+}
+ 
+<h1>Pago con PayPal Sandbox</h1>
+ 
+<p><strong>Orden:</strong> @Model.PurchaseOrderId</p>
+<p><strong>Total:</strong> @Model.Total.ToString("C")</p>
+<p><strong>Estado:</strong> @Model.Status</p>
+ 
+<div class="alert alert-info">
+    Esta vista usa el boton oficial de PayPal embebido en la aplicacion.
+    Desde PayPal Sandbox se puede probar con cuenta Sandbox o con tarjeta de prueba.
+</div>
+ 
+<div id="paypal-button-container" style="max-width: 480px;"></div>
+ 
+<div id="paypal-message" class="mt-3"></div>
+ 
+@section Scripts {
+    <script src="https://www.paypal.com/sdk/js?client-id=@paypalClientId&currency=USD&components=buttons&enable-funding=card"></script>
+ 
+    <script>
+        let paymentTransactionId = 0;
+ 
+        function showMessage(message, type) {
+            document.getElementById('paypal-message').innerHTML =
+                '<div class="alert alert-' + type + '">' + message + '</div>';
+        }
+ 
+        paypal.Buttons({
+            createOrder: function () {
+                return fetch('/Payment/CreatePayPalButtonOrderJson?orderId=@Model.PurchaseOrderId', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        showMessage(data.message, 'danger');
+                        throw new Error(data.message);
+                    }
+ 
+                    paymentTransactionId = data.paymentTransactionId;
+                    return data.paypalOrderId;
+                });
+            },
+ 
+            onApprove: function (data) {
+                return fetch('/Payment/CapturePayPalButtonOrderJson', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        paypalOrderId: data.orderID,
+                        paymentTransactionId: paymentTransactionId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirectUrl;
+                    } else {
+                        showMessage(data.message, 'danger');
+                    }
+                });
+            },
+ 
+            onCancel: function () {
+                showMessage('Pago cancelado por el usuario.', 'warning');
+            },
+ 
+            onError: function (err) {
+                console.error(err);
+                showMessage('Ocurrio un error con PayPal Sandbox.', 'danger');
+            }
+        }).render('#paypal-button-container');
+    </script>
+}

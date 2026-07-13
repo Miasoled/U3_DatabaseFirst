@@ -1,5 +1,43 @@
 @model SakilaApp.Models.Commerce.PaymentTransaction
 
+model SakilaApp.Models.Commerce.PaymentTransaction
+
+<h1>Pago generado</h1>
+
+<p><strong>Orden:</strong> @Model.PurchaseOrderId</p>
+<p><strong>Pasarela:</strong> @Model.Provider</p>
+<p><strong>Estado:</strong> @Model.Status</p>
+<p><strong>Total:</strong> @((Model.AmountInCents / 100m).ToString("C"))</p>
+<p><strong>Transaccion cliente:</strong> @Model.ClientTransactionId</p>
+
+@if (Model.Provider == "PayPhone" && !string.IsNullOrWhiteSpace(Model.PayphonePaymentUrl))
+{
+    <a class="btn btn-success" href="@Model.PayphonePaymentUrl" target="_blank">
+        Abrir link de pago PayPhone
+    </a>
+}
+
+@if (Model.Provider == "PayPal" && Model.Status == "Pending" && !string.IsNullOrWhiteSpace(Model.PayPalApprovalUrl))
+{
+    <a class="btn btn-info" href="@Model.PayPalApprovalUrl" target="_blank">
+        Abrir PayPal Sandbox
+    </a>
+}
+
+@if (Model.Status == "Paid")
+{
+    <div class="alert alert-success mt-3">
+        Pago confirmado correctamente.
+    </div>
+}
+
+@if (User.IsInRole("Administrador") && Model.Status == "Pending")
+{
+    <a class="btn btn-warning" asp-action="MarkAsPaid" asp-route-id="@Model.PaymentTransactionId">
+        Marcar como pagado para demostracion
+    </a>
+}
+
 <h1>Pago generado</h1>
 
 <p><strong>Orden:</strong> @Model.PurchaseOrderId</p>
