@@ -1,0 +1,43 @@
+services:
+
+  # Servicio de base de datos PostgreSQL con el esquema Sakila
+  sakila-db:
+    image: postgres:17
+    container_name: sakila-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: sakila
+      POSTGRES_USER: cruduser
+      POSTGRES_PASSWORD: crud123
+    ports:
+      - "5432:5432"
+    volumes:
+      - sakila_data:/var/lib/postgresql/data
+      - ./sakila.backup:/docker-entrypoint-initdb.d/sakila.backup
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cruduser -d sakila"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Servicio de la aplicación web ASP.NET Core (SakilaApp)
+  sakila-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sakila-app
+    restart: always
+    depends_on:
+      sakila-db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=sakila-db;Port=5432;Database=sakila;Username=cruduser;Password=crud123"
+      ASPNETCORE_ENVIRONMENT: Development
+      Authentication__Google__ClientId: "${GOOGLE_CLIENT_ID}"
+      Authentication__Google__ClientSecret: "${GOOGLE_CLIENT_SECRET}"
+    ports:
+      - "8080:8080"
+
+volumes:
+  sakila_data:
