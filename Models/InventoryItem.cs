@@ -6,7 +6,7 @@ using SakilaApp.Models.Commerce;
 
 namespace SakilaApp.Controllers;
 
-[Authorize(Roles = "Administrador")]
+[Authorize(Roles = "Administrador,Empleado")]
 public class InventoryController : Controller
 {
     private readonly SakilaContext _sakilaContext;

@@ -1,0 +1,134 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: sakila-db-swarm:1.0
+    environment:
+      POSTGRES_DB: sakila
+      POSTGRES_USER: cruduser
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    secrets:
+      - postgres_password
+
+    volumes:
+      - type: volume
+        source: postgres_data_v18
+        target: /var/lib/postgresql
+
+    networks:
+      - sakila_overlay
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cruduser -d sakila"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.sakila.postgres-data == true
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 10
+      update_config:
+        parallelism: 1
+        order: stop-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        order: stop-first
+
+  sakilaapp:
+    image: sakilaapp:compose
+    entrypoint:
+      - /bin/sh
+      - -c
+      - >-
+        export ConnectionStrings__DefaultConnection="Host=postgres;Port=5432;Database=sakila;Username=cruduser;Password=$$(cat /run/secrets/postgres_password)";
+        export PayPal__ClientId="$$(cat /run/secrets/paypal_client_id)";
+        export PayPal__ClientSecret="$$(cat /run/secrets/paypal_client_secret)";
+        export PayPhone__Token="$$(cat /run/secrets/payphone_token)";
+        export PayPhone__StoreId="$$(cat /run/secrets/payphone_store_id)";
+        export Authentication__Google__ClientId="$$(cat /run/secrets/google_client_id)";
+        export Authentication__Google__ClientSecret="$$(cat /run/secrets/google_client_secret)";
+        export EmailSettings__SenderEmail="$$(cat /run/secrets/email_sender_email)";
+        export EmailSettings__Password="$$(cat /run/secrets/email_password)";
+        exec dotnet SakilaApp.dll
+    ports:
+      - target: 8080
+        published: 5164
+        protocol: tcp
+        mode: ingress
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      ASPNETCORE_ENVIRONMENT: "Development"
+      PayPal__BaseUrl: "https://api-m.sandbox.paypal.com"
+      PayPal__ReturnUrl: "http://localhost:5164/Payment/Success"
+      PayPal__CancelUrl: "http://localhost:5164/Payment/Cancel"
+      PayPal__CurrencyCode: "USD"
+      EmailSettings__SmtpServer: "smtp.gmail.com"
+      EmailSettings__SmtpPort: "587"
+      EmailSettings__SenderName: "sakila"
+    secrets:
+      - postgres_password
+      - paypal_client_id
+      - paypal_client_secret
+      - payphone_token
+      - payphone_store_id
+      - google_client_id
+      - google_client_secret
+      - email_sender_email
+      - email_password
+    volumes:
+      - sakila_keys:/home/app/.aspnet/DataProtection-Keys
+    networks:
+      - sakila_overlay
+    deploy:
+      replicas: 2
+      endpoint_mode: vip
+      placement:
+        preferences:
+          - spread: node.hostname
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 10
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+        failure_action: rollback
+      rollback_config:
+        parallelism: 1
+        order: stop-first
+
+networks:
+  sakila_overlay:
+    driver: overlay
+    attachable: true
+
+volumes:
+  postgres_data_v18:
+  sakila_keys:
+
+secrets:
+  postgres_password:
+    external: true
+  paypal_client_id:
+    external: true
+  paypal_client_secret:
+    external: true
+  payphone_token:
+    external: true
+  payphone_store_id:
+    external: true
+  google_client_id:
+    external: true
+  google_client_secret:
+    external: true
+  email_sender_email:
+    external: true
+  email_password:
+    external: true

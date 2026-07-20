@@ -1,38 +1,58 @@
 @model IEnumerable<SakilaApp.Models.Commerce.FilmStock>
 
-<h1>Catálogo de películas</h1>
+@{
+    ViewData["Title"] = "Catálogo de películas";
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-collection-play"></i> Catálogo de películas</h1>
+    <a asp-action="Cart" class="btn btn-outline-secondary">
+        <i class="bi bi-cart3"></i> Ver carrito
+    </a>
+</div>
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">@TempData["Error"]</div>
+    <div class="alert d-flex align-items-center gap-2 mb-4"
+         style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:10px;padding:.85rem 1.1rem;">
+        <i class="bi bi-exclamation-circle-fill flex-shrink-0"></i>
+        <span>@TempData["Error"]</span>
+    </div>
 }
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Película</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Comprar</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.Title</td>
-            <td>@item.UnitPrice.ToString("C")</td>
-            <td>@item.Stock</td>
-            <td>
-                <form asp-action="AddToCart" method="post" class="d-flex gap-2">
-                    <input type="hidden" name="filmStockId" value="@item.FilmStockId" />
-                    <input type="number" name="quantity" value="1" min="1" max="@item.Stock" class="form-control" style="width:90px" />
-                    <button class="btn btn-primary">Agregar</button>
-                </form>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
-
-<a class="btn btn-success" asp-action="Cart">Ver carrito</a>
+<div class="table-wrapper">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Película</th>
+                <th class="text-end">Precio</th>
+                <th class="text-center">Stock</th>
+                <th class="text-end">Agregar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="font-weight:500;color:var(--text);">@item.Title</td>
+                    <td class="text-end">@item.UnitPrice.ToString("C")</td>
+                    <td class="text-center">
+                        <span style="background:var(--bg-subtle);border:1px solid var(--border);border-radius:20px;padding:.2em .65em;font-size:.8rem;color:var(--text-secondary);">
+                            @item.Stock disponibles
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <form asp-action="AddToCart" method="post" class="d-flex gap-2 justify-content-end">
+                            <input type="hidden" name="filmStockId" value="@item.FilmStockId" />
+                            <input type="number" name="quantity" value="1" min="1" max="@item.Stock"
+                                   class="form-control text-center" style="width:72px;" />
+                            <button class="btn btn-primary btn-sm">
+                                <i class="bi bi-cart-plus"></i> Agregar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

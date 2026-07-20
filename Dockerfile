@@ -23,6 +23,11 @@ WORKDIR /app
 # Copiamos únicamente los binarios publicados desde la etapa de build
 COPY --from=build /app/publish .
 
+# Instalar dependencias de runtime necesarias para Npgsql/Kerberos
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libkrb5-3 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Puerto interno que expone Kestrel dentro del contenedor
 EXPOSE 8080
 

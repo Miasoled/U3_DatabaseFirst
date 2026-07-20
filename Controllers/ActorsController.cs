@@ -23,16 +23,30 @@ namespace SakilaApp.Controllers
         }
 
         // GET: Actors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? buscar, int pagina = 1)
         {
-            var actores = await _context.Actors
-                .Where(a =>
-                    a.FirstName.StartsWith("N") ||
-                    a.FirstName.EndsWith("N"))
-                .Skip(1)
-                .Take(5)
+            int tamanioPagina = 10;
+
+            var consulta = _context.Actors.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(buscar))
+            {
+                consulta = consulta.Where(a =>
+                    a.FirstName.Contains(buscar) ||
+                    a.LastName.Contains(buscar));
+            }
+
+            int totalRegistros = await consulta.CountAsync();
+
+            var actores = await consulta
                 .OrderBy(a => a.LastName)
+                .Skip((pagina - 1) * tamanioPagina)
+                .Take(tamanioPagina)
                 .ToListAsync();
+
+            ViewBag.Buscar = buscar;
+            ViewBag.PaginaActual = pagina;
+            ViewBag.TotalPaginas = (int)Math.Ceiling(totalRegistros / (double)tamanioPagina);
 
             return View(actores);
         }

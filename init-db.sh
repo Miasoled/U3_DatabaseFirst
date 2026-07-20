@@ -1,14 +1,15 @@
 #!/bin/bash
-# Script de inicialización: restaura el backup de la base de datos Sakila
-# dentro del contenedor de PostgreSQL en el primer arranque.
+# Restores the Sakila database backup on first container startup.
 set -e
 
-if [ -f "/docker-entrypoint-initdb.d/sakila.backup" ]; then
-  echo ">> Restaurando base de datos Sakila desde sakila.backup ..."
+BACKUP="/docker-entrypoint-initdb.d/sakila.backup"
+
+if [ -f "$BACKUP" ]; then
+  echo ">> Restoring Sakila database from $BACKUP ..."
   pg_restore -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
     --clean --if-exists --no-owner --no-privileges \
-    /docker-entrypoint-initdb.d/sakila.backup
-  echo ">> Restauración completada."
+    "$BACKUP"
+  echo ">> Restore complete."
 else
-  echo ">> No se encontró sakila.backup, se omite la restauración."
+  echo ">> $BACKUP not found — skipping restore."
 fi

@@ -1,40 +1,19 @@
-# ==========================================
-# Compilación de .NET (se regeneran en el build del contenedor)
-# ==========================================
-**/bin/
-**/obj/
-
-# ==========================================
-# Archivos de editores / IDEs
-# ==========================================
+bin/
+obj/
+publish/
 .vs/
 .vscode/
+.idea/
+.git/
+DataProtectionKeys/
+.docker/secrets/
+*.log
 *.user
 *.suo
-
-# ==========================================
-# Control de versiones
-# ==========================================
-.git/
-.gitignore
-
-# ==========================================
-# Documentación y archivos no necesarios en la imagen
-# ==========================================
-README.md
-ScaffoldingReadMe.txt
-screenshots/
-
-# ==========================================
-# Archivos de Docker (no deben copiarse dentro de su propia imagen)
-# ==========================================
-Dockerfile
-docker-compose.yml
-.dockerignore
-
-# ==========================================
-# Secretos y configuración local sensible
-# ==========================================
-appsettings.Development.json
+docker-compose*.yml
 .env
-*.env
+.env.*
+!.env.example
+*.tar
+*.dump
+backups/

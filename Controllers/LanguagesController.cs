@@ -44,13 +44,7 @@ namespace SakilaApp.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var peliculas = await _context.Films
-                .Include(f => f.Language)
-                .Include(f => f.OriginalLanguage)
-                .OrderBy(f => f.Title)
-                .ToListAsync();
-
-            return View(peliculas);
+            return View(await _context.Languages.ToListAsync());
         }
         // GET: Languages/Details/5
         public async Task<IActionResult> Details(int? id)

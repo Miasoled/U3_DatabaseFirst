@@ -1,37 +1,96 @@
 @model SakilaApp.Models.Commerce.PurchaseOrder
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
- 
+
 @{
+    ViewData["Title"] = "Pagar con PayPal";
     var paypalClientId = Configuration["PayPal:ClientId"];
 }
- 
-<h1>Pago con PayPal Sandbox</h1>
- 
-<p><strong>Orden:</strong> @Model.PurchaseOrderId</p>
-<p><strong>Total:</strong> @Model.Total.ToString("C")</p>
-<p><strong>Estado:</strong> @Model.Status</p>
- 
-<div class="alert alert-info">
-    Esta vista usa el boton oficial de PayPal embebido en la aplicacion.
-    Desde PayPal Sandbox se puede probar con cuenta Sandbox o con tarjeta de prueba.
+
+<div class="page-header">
+    <h1><i class="bi bi-paypal"></i> Pagar con PayPal Sandbox</h1>
+    <a asp-controller="Store" asp-action="Cart" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver al carrito
+    </a>
 </div>
- 
-<div id="paypal-button-container" style="max-width: 480px;"></div>
- 
-<div id="paypal-message" class="mt-3"></div>
- 
+
+<div class="row g-4 justify-content-center">
+
+    <!-- Resumen de la orden -->
+    <div class="col-lg-5 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="bi bi-bag" style="color:var(--primary)"></i>
+                Resumen de la orden
+            </div>
+            <div class="table-wrapper" style="border:none;border-radius:0;box-shadow:none;">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Película</th>
+                            <th class="text-center">Cant.</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var d in Model.Details)
+                        {
+                            <tr>
+                                <td style="font-weight:500;color:var(--text);">@d.FilmTitle</td>
+                                <td class="text-center">@d.Quantity</td>
+                                <td class="text-end">@d.Subtotal.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr style="border-top:2px solid var(--border);">
+                            <td colspan="2" class="text-end fw-bold" style="color:var(--text);">Total</td>
+                            <td class="text-end fw-bold" style="font-size:1.05rem;color:var(--text);">
+                                @Model.Total.ToString("C")
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón PayPal -->
+    <div class="col-lg-5 col-md-6">
+        <div class="card">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="bi bi-credit-card" style="color:var(--primary)"></i>
+                Selecciona tu método de pago
+            </div>
+            <div class="card-body">
+                <div class="alert d-flex align-items-start gap-2 mb-3"
+                     style="background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;border-radius:8px;font-size:.875rem;padding:.85rem 1rem;">
+                    <i class="bi bi-info-circle-fill mt-1 flex-shrink-0"></i>
+                    <span>
+                        Estás usando <strong>PayPal Sandbox</strong>. Puedes pagar con una
+                        cuenta de prueba o con tarjeta de crédito sandbox.
+                    </span>
+                </div>
+
+                <div id="paypal-button-container"></div>
+                <div id="paypal-message" class="mt-3"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 @section Scripts {
     <script src="https://www.paypal.com/sdk/js?client-id=@paypalClientId&currency=USD&components=buttons&enable-funding=card"></script>
- 
+
     <script>
         let paymentTransactionId = 0;
- 
+
         function showMessage(message, type) {
             document.getElementById('paypal-message').innerHTML =
-                '<div class="alert alert-' + type + '">' + message + '</div>';
+                '<div class="alert" style="border-radius:8px;padding:.85rem 1rem;font-size:.875rem;" class="alert-' + type + '">' + message + '</div>';
         }
- 
+
         paypal.Buttons({
             createOrder: function () {
                 return fetch('/Payment/CreatePayPalButtonOrderJson?orderId=@Model.PurchaseOrderId', {
@@ -43,18 +102,15 @@
                         showMessage(data.message, 'danger');
                         throw new Error(data.message);
                     }
- 
                     paymentTransactionId = data.paymentTransactionId;
                     return data.paypalOrderId;
                 });
             },
- 
+
             onApprove: function (data) {
                 return fetch('/Payment/CapturePayPalButtonOrderJson', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         paypalOrderId: data.orderID,
                         paymentTransactionId: paymentTransactionId
@@ -69,14 +125,14 @@
                     }
                 });
             },
- 
+
             onCancel: function () {
                 showMessage('Pago cancelado por el usuario.', 'warning');
             },
- 
+
             onError: function (err) {
                 console.error(err);
-                showMessage('Ocurrio un error con PayPal Sandbox.', 'danger');
+                showMessage('Ocurrió un error con PayPal Sandbox.', 'danger');
             }
         }).render('#paypal-button-container');
     </script>

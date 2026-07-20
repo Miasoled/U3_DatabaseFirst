@@ -8,7 +8,23 @@
     </a>
 </div>
 
-<div class="table-wrapper">
+<div class="search-bar">
+    <form asp-action="Index" method="get">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-6">
+                <label class="control-label">Buscar por nombre o apellido</label>
+                <input type="text" name="buscar" value="@ViewBag.Buscar"
+                       class="form-control" placeholder="Ej: Penelope, Smith..." />
+            </div>
+            <div class="col-md-6 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">🔍 Filtrar</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">✕ Limpiar</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="table-wrapper mb-3">
     <table class="table">
         <thead>
             <tr>
@@ -37,3 +53,36 @@
         </tbody>
     </table>
 </div>
+
+<nav aria-label="Paginación">
+    <ul class="pagination justify-content-center">
+        @if ((int)ViewBag.PaginaActual > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-buscar="@ViewBag.Buscar"
+                   asp-route-pagina="@((int)ViewBag.PaginaActual - 1)">
+                    ‹ Anterior
+                </a>
+            </li>
+        }
+        @for (int i = 1; i <= (int)ViewBag.TotalPaginas; i++)
+        {
+            <li class="page-item @(i == (int)ViewBag.PaginaActual ? "active" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-buscar="@ViewBag.Buscar"
+                   asp-route-pagina="@i">@i</a>
+            </li>
+        }
+        @if ((int)ViewBag.PaginaActual < (int)ViewBag.TotalPaginas)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-action="Index"
+                   asp-route-buscar="@ViewBag.Buscar"
+                   asp-route-pagina="@((int)ViewBag.PaginaActual + 1)">
+                    Siguiente ›
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

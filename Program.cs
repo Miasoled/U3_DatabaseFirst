@@ -35,13 +35,21 @@ builder.Services.Configure<EmailSettings>(
 
 builder.Services.AddTransient<IEmailSender, GmailEmailSender>();
 
-builder.Services
-    .AddAuthentication()
-    .AddGoogle(options =>
-    {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
-    });
+var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
+if (!string.IsNullOrEmpty(googleClientId))
+{
+    builder.Services
+        .AddAuthentication()
+        .AddGoogle(options =>
+        {
+            options.ClientId = googleClientId;
+            options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+        });
+}
+else
+{
+    builder.Services.AddAuthentication();
+}
 
 //Pasarela de Pagos con PayPhone
 builder.Services.Configure<PayPhoneSettings>(
@@ -78,7 +86,13 @@ app.MapRazorPages();
 
 using (var scope = app.Services.CreateScope())
 {
+    // Aplica automáticamente las migraciones pendientes de Identity
+    // al iniciar el contenedor (crea AspNetUsers, AspNetRoles, etc. si no existen)
+    var appDb = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await appDb.Database.MigrateAsync();
+
     await IdentitySeeder.SeedAsync(scope.ServiceProvider);
+    await FilmStockSeeder.SeedAsync(scope.ServiceProvider);
 }
 
 app.Run();

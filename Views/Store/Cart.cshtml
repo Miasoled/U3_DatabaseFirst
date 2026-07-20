@@ -1,47 +1,137 @@
 @model IEnumerable<SakilaApp.Models.Commerce.ShoppingCartItem>
 
-<h1>Carrito</h1>
+@{
+    ViewData["Title"] = "Carrito de compras";
+    var total = Model.Sum(i => i.Quantity * i.FilmStock.UnitPrice);
+    bool isEmpty = !Model.Any();
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-cart3"></i> Carrito de compras</h1>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Seguir comprando
+    </a>
+</div>
 
 @if (TempData["Error"] != null)
 {
-    <div class="alert alert-danger">@TempData["Error"]</div>
+    <div class="alert d-flex align-items-center gap-2 mb-4"
+         style="background:#fef2f2;border:1px solid #fecaca;color:#dc2626;border-radius:10px;padding:.85rem 1.1rem;">
+        <i class="bi bi-exclamation-circle-fill flex-shrink-0"></i>
+        <span>@TempData["Error"]</span>
+    </div>
 }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Película</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Subtotal</th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.FilmStock.Title</td>
-            <td>@item.Quantity</td>
-            <td>@item.FilmStock.UnitPrice.ToString("C")</td>
-            <td>@((item.Quantity * item.FilmStock.UnitPrice).ToString("C"))</td>
-        </tr>
-    }
-    </tbody>
-</table>
+@if (isEmpty)
+{
+    <div class="card text-center" style="padding:3rem 1rem;">
+        <i class="bi bi-cart-x" style="font-size:3rem;color:var(--text-muted);margin-bottom:1rem;display:block;"></i>
+        <h5 style="color:var(--text-secondary);">Tu carrito está vacío</h5>
+        <p style="color:var(--text-muted);font-size:.9rem;">Agrega películas desde el catálogo.</p>
+        <a asp-action="Index" class="btn btn-primary mt-2">
+            <i class="bi bi-shop"></i> Ver catálogo
+        </a>
+    </div>
+}
+else
+{
+    <div class="row g-4 align-items-start">
 
-<h3>Total: @Model.Sum(i => i.Quantity * i.FilmStock.UnitPrice).ToString("C")</h3>
+        <!-- Tabla de ítems -->
+        <div class="col-lg-8">
+            <div class="table-wrapper">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Película</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-end">Precio</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="font-weight:500;color:var(--text);">
+                                    @item.FilmStock.Title
+                                </td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-end">@item.FilmStock.UnitPrice.ToString("C")</td>
+                                <td class="text-end fw-semibold">
+                                    @((item.Quantity * item.FilmStock.UnitPrice).ToString("C"))
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr style="border-top:2px solid var(--border);">
+                            <td colspan="3" class="text-end fw-bold" style="color:var(--text);padding:.9rem 1rem;">
+                                Total
+                            </td>
+                            <td class="text-end fw-bold" style="color:var(--text);font-size:1.1rem;padding:.9rem 1rem;">
+                                @total.ToString("C")
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
 
-<form asp-action="Checkout" method="post">
-    <button class="btn btn-primary">Generar orden y pagar con PayPhone</button>
-</form>
-<form asp-action="Checkout" method="post">
-        <input type="hidden" name="provider" value="PayPal" />
-        <button class="btn btn-info">
-            Pagar con PayPal Sandbox
-        </button>
-</form>
-<form asp-action="CheckoutPayPalButton" method="post">
-    <button class="btn btn-dark">
-        Pagar con boton PayPal / Tarjeta Sandbox
-    </button>
-</form>
+        <!-- Panel de pago -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center gap-2">
+                    <i class="bi bi-lock-fill" style="color:var(--primary)"></i>
+                    Pago seguro
+                </div>
+                <div class="card-body d-flex flex-column gap-3">
+
+                    <div style="text-align:center;padding:.5rem 0;">
+                        <div style="font-size:.78rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.25rem;">
+                            Total a pagar
+                        </div>
+                        <div style="font-size:1.75rem;font-weight:700;color:var(--text);">
+                            @total.ToString("C")
+                        </div>
+                    </div>
+
+                    <hr style="margin:.25rem 0;" />
+
+                    <p style="font-size:.8rem;color:var(--text-muted);margin:0;">
+                        Selecciona tu pasarela de pago:
+                    </p>
+
+                    <!-- PayPhone -->
+                    <form asp-action="Checkout" method="post">
+                        <input type="hidden" name="provider" value="PayPhone" />
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-phone"></i> Pagar con PayPhone
+                        </button>
+                    </form>
+
+                    <!-- PayPal redirección -->
+                    <form asp-action="Checkout" method="post">
+                        <input type="hidden" name="provider" value="PayPal" />
+                        <button type="submit" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-paypal"></i> Pagar con PayPal Sandbox
+                        </button>
+                    </form>
+
+                    <!-- PayPal botón embebido -->
+                    <form asp-action="CheckoutPayPalButton" method="post">
+                        <button type="submit" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-credit-card"></i> Botón PayPal / Tarjeta
+                        </button>
+                    </form>
+
+                    <p style="font-size:.75rem;color:var(--text-muted);text-align:center;margin:0;">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Ambiente de pruebas — no se realizan cargos reales
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
